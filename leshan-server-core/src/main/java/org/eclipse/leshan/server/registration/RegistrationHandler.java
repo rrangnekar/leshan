@@ -66,7 +66,7 @@ public class RegistrationHandler {
         // We must check if the client is using the right identity.
         final Registration registration = authorizer.isAuthorized(registerRequest, builder.build(), sender);
         if (registration == null) {
-            return new SendableResponse<>(RegisterResponse.forbidden(null));
+            return new SendableResponse<>(RegisterResponse.badRequest("Unauthorized"));
         }
 
         // Add registration to the store
@@ -100,9 +100,7 @@ public class RegistrationHandler {
         }
 
         if (authorizer.isAuthorized(updateRequest, registration, sender) == null) {
-            // TODO replace by Forbidden if https://github.com/OpenMobileAlliance/OMA_LwM2M_for_Developers/issues/181 is
-            // closed.
-            return new SendableResponse<>(UpdateResponse.badRequest("forbidden"));
+            return new SendableResponse<>(UpdateResponse.badRequest("Unauthorized"));
         }
 
         // Create update
@@ -137,9 +135,7 @@ public class RegistrationHandler {
             return new SendableResponse<>(DeregisterResponse.notFound());
         }
         if (authorizer.isAuthorized(deregisterRequest, registration, sender) == null) {
-            // TODO replace by Forbidden if https://github.com/OpenMobileAlliance/OMA_LwM2M_for_Developers/issues/181 is
-            // closed.
-            return new SendableResponse<>(DeregisterResponse.badRequest("forbidden"));
+            return new SendableResponse<>(DeregisterResponse.badRequest("Unauthorized"));
         }
 
         final Deregistration deregistration = registrationService.getStore()
